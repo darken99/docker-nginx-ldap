@@ -14,7 +14,7 @@ RUN \
 	&& unzip -x /nginx-auth-ldap.zip -d ~/ \
 	&& cd ~/nginx-${NGINX_VERSION} \
 	&& ./configure \
-		--add-dynamic-module=/root/nginx-auth-ldap-master \
+		--add-module=/root/nginx-auth-ldap-master \
 		--with-http_ssl_module \
 		--with-http_v2_module \
 		--with-debug \
