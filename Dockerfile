@@ -1,3 +1,5 @@
+FROM alpine:edge
+
 ENV NGINX_VERSION 1.11.3
 
 # Install required software
