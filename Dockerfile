@@ -5,7 +5,7 @@ ENV NGINX_VERSION 1.11.5
 # Install required software
 RUN \
     apk add --no-cache pcre openldap dockerize && \
-    apk add --no-cache --virtual build-dependencies build-base curl pcre-dev openldap-dev && \
+    apk add --no-cache --virtual build-dependencies build-base curl pcre-dev openldap-dev zlib-dev && \
     curl -s -L http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz -o /nginx.tar.gz && \
     curl -s -L https://github.com/kvspb/nginx-auth-ldap/archive/master.zip -o /nginx-auth-ldap.zip && \
     mkdir /var/log/nginx \
