@@ -1,13 +1,13 @@
 FROM alpine:edge
 
-ENV NGINX_VERSION 1.11.5
+ENV NGINX_VERSION 1.12.1
 
 # Install required software
 RUN \
-    apk add --no-cache pcre openldap dockerize && \
+    apk add --no-cache pcre openldap && \
     apk add --no-cache --virtual build-dependencies build-base curl pcre-dev openldap-dev zlib-dev && \
-    curl -s -L http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz -o /nginx.tar.gz && \
-    curl -s -L https://github.com/kvspb/nginx-auth-ldap/archive/master.zip -o /nginx-auth-ldap.zip && \
+    curl -sL http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz -o /nginx.tar.gz && \
+    curl -sL https://github.com/kvspb/nginx-auth-ldap/archive/master.zip -o /nginx-auth-ldap.zip && \
     mkdir /var/log/nginx \
 	&& mkdir /etc/nginx \
 	&& tar -C ~/ -xzf /nginx.tar.gz \
@@ -26,10 +26,13 @@ RUN \
 	&& make install \
 	&& cd .. \
 	&& rm -rf nginx-auth-ldap \
-	&& rm -rf nginx-${NGINX_VERSION} && \
-    apk del build-dependencies
+	&& rm -rf nginx-${NGINX_VERSION} \
+    && apk del build-dependencies  \
+    # forward request and error logs to docker log collector
+    && ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log
 
 
 EXPOSE 80 443
 
-CMD ["dockerize","-stdout","/var/log/nginx/access.log","-stderr","/var/log/nginx/error.log","/usr/sbin/nginx","-g","daemon off;"]
+CMD ["/usr/sbin/nginx","-g","daemon off;"]
