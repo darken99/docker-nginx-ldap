@@ -1,6 +1,6 @@
 FROM alpine:edge
 
-ENV NGINX_VERSION 1.12.1
+ENV NGINX_VERSION 1.15.5
 
 # Install required software
 RUN \
