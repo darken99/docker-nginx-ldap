@@ -30,6 +30,7 @@ RUN CONFARGS=$(nginx -V 2>&1 | sed -n -e 's/^.*arguments: //p') \
 
 FROM nginx:alpine
 # Extract the dynamic module NCHAN from the builder image
+RUN apk add --no-cache openldap
 COPY --from=builder /usr/lib/nginx/ngx_http_auth_ldap_module.so /usr/lib/nginx/ngx_http_auth_ldap_module.so
 COPY ngx_http_auth_ldap_module.nginx /etc/nginx/modules.d/
 
