@@ -24,15 +24,19 @@ RUN CONFARGS=$(nginx -V 2>&1 | sed -n -e 's/^.*arguments: //p') \
   ./configure --with-compat $CONFARGS --add-dynamic-module=$LDAPDIR && \
   make -j$(getconf _NPROCESSORS_ONLN) && \
   make install && \
-  install -m755 objs/ngx_http_auth_ldap_module.so /usr/lib/nginx/ngx_http_auth_ldap_module.so && \
+  install -m755 objs/ngx_http_auth_ldap_module.so /usr/lib/nginx/modules/ngx_http_auth_ldap_module.so && \
   strip /usr/lib/nginx/modules/*.so
 
 
 FROM nginx:alpine
-# Extract the dynamic module NCHAN from the builder image
-RUN apk add --no-cache openldap
-COPY --from=builder /usr/lib/nginx/ngx_http_auth_ldap_module.so /usr/lib/nginx/ngx_http_auth_ldap_module.so
+
+# Install dependencies
+RUN apk add --no-cache libldap
+
 COPY ngx_http_auth_ldap_module.nginx /etc/nginx/modules.d/
 
 RUN mkdir -p /etc/nginx/modules.d/ && \
     echo "include /etc/nginx/modules.d/*.conf;" >> /etc/nginx/nginx.conf
+
+# Extract the dynamic module from the builder image
+COPY --from=builder /usr/lib/nginx/modules/ngx_http_auth_ldap_module.so /usr/lib/nginx/modules/ngx_http_auth_ldap_module.so

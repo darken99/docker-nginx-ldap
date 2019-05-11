@@ -1,1 +1,1 @@
-load_module /usr/lib/nginx/ngx_http_auth_ldap_module.so;
+load_module /usr/lib/nginx/modules/ngx_http_auth_ldap_module.so;
